@@ -1,0 +1,57 @@
+---
+title: "Enunciados problemas"
+format: html
+editor: visual
+warning: FALSE
+---
+
+## Problema 1 (Tabla de valores)
+
+Planteamos la siguiente tabla de beneficios:
+
+```{r}
+y.1<-matrix(c(50,100,150,
+              -100,300,700,
+              -350,500,1200),nrow=3,byrow=T)
+colnames(y.1)<-c("e1","e2","e3")
+rownames(y.1)<-c("a1","a2","a3")
+library(knitr)
+library(kableExtra)
+
+kable(y.1, 
+      caption = "Tabla de Decisión bajo Incertidumbre (Beneficios)", 
+      align = 'c', 
+      col.names = colnames(y.1)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+## Problema 2 (Situación real)
+
+Un agricultor se plantea cuándo debería empezar a sembrar su cultivo, las tres opciones que tiene son: hacer una siembra temprana; que permite la correcta maduración del cultivo en caso de sequía, sembrar normalmente; que será lo ideal en caso de clima equilibrado, o hacer una siembra tardía; que permite el crecimiento adecuado en caso de lluvias excesivas.
+
+d1:Hacer una siembra temprana.  
+d2:Hacer una siembra normal.  
+d3:Hacer una siembra tardía.
+
+La decisión debe tomarse teniendo en cuenta el posible clima que se presente en los meses siguientes a la siembra, el cual es totalmente impredecible, por lo que no podemos estimar ninguna probabilidad de precipitación. Estos estados climáticos pueden ser:
+
+e1:Clima seco y poco lluvioso.  
+e2:Clima equilibrado con lluvias repartidas de manera uniforme.  
+e3:Clima húmedo con lluvias excesivas.
+
+El beneficio esperado en cada una de las situaciones planteadas es el siguiente:
+
+```{r}
+y.2<-matrix(c(300,450,100,
+              250,500,200,
+              150,350,400),nrow=3,byrow=T)
+colnames(y.2)<-c("e1","e2","e3")
+rownames(y.2)<-c("d1","d2","d3")
+
+kable(y.2, 
+      caption = "Beneficio según tipo de siembra y clima (en miles de €)", 
+      align = 'c', 
+      col.names = colnames(y.2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  row_spec(0, bold = T, background = "lightgray")
+```
