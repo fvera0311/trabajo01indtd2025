@@ -1,0 +1,175 @@
+---
+title: "Resoluciones"
+format: html
+editor: visual
+warning: FALSE
+---
+Antes de comenzar con los problemas, cargamos las funciones necesarias:
+```{r}
+source("teoriadecision_funciones_incertidumbre.R")
+```
+
+## Problema 1 (Tabla de valores)
+
+Planteamos la siguiente tabla de beneficios:
+
+```{r}
+y.1<-matrix(c(50,100,150,
+              -100,300,700,
+              -350,500,1200),nrow=3,byrow=T)
+colnames(y.1)<-c("e1","e2","e3")
+rownames(y.1)<-c("a1","a2","a3")
+library(knitr)
+library(kableExtra)
+
+kable(y.1, 
+      caption = "Tabla de Decisión bajo Incertidumbre (Beneficios)", 
+      align = 'c', 
+      col.names = colnames(y.1)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+
+### 1. Criterio de Wald (pesimista)
+
+```{r}
+wald<- criterio.Wald(y.1, favorable=TRUE)
+
+df_wald<-data.frame(
+  Alternativa = names(wald$ValorAlternativas),
+  Minimos = wald$ValorAlternativas,
+  Decision = ifelse(names(wald$ValorAlternativas) %in% names(wald$AlternativaOptima),
+                    paste0(wald$ValorOptimo, " (Óptima)"), ""))
+
+kable(df_wald, caption = "Criterio de Wald", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+
+La mejor alternativa para maximizar el resultado mínimo es $a_1$
+
+### 2. Criterio optimista
+
+```{r}
+res.optimista<- criterio.Optimista(y.1, favorable=TRUE)
+df_optimista<-data.frame(
+  Alternativa = names(res.optimista$ValorAlternativas),
+  Maximos = res.optimista$ValorAlternativas,
+  Decision = ifelse(names(res.optimista$ValorAlternativas) %in% names(res.optimista$AlternativaOptima),
+                    paste0(res.optimista$ValorOptimo, " (Óptima)"), ""))
+kable(df_optimista, caption = "Criterio Optimista", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+
+La mejor alternativa para maximizar el resultado máximo es $a_3$
+
+### 3. Criterio de Hurwicz
+
+Primero se fija un $\alpha \in [0,1]$ que represente el nivel de optimismo del decisor. En este caso tomamos $\alpha=0.7$ estando en el caso de un decisor bastante optimista.
+
+```{r}
+alfa<-0.7
+res.hurwicz<- criterio.Hurwicz(y.1, alfa=alfa, favorable=T)
+df_hurwicz<-data.frame(
+  Alternativa = names(res.hurwicz$ValorAlternativas),
+  Valores = round(res.hurwicz$ValorAlternativas,2),
+  Decision = ifelse(names(res.hurwicz$ValorAlternativas) %in% names(res.hurwicz$AlternativaOptima),
+                    paste0(round(res.hurwicz$ValorOptimo,2), " (Óptima)"), ""))
+kable(df_hurwicz, caption = paste0("Criterio de Hurwicz (alfa=", alfa, ")"), align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+
+La mejor alternativa con un nivel de optimismo $\alpha = 0.7$ es $a_3$
+
+
+Representamos graficamente el comportamiento de $a_1,a_2$ y $a_3$ en función del valor de $\alpha$:
+```{r}
+dibuja.criterio.Hurwicz(y.1, favorable=T)
+```
+
+En el gráfico se observa que en el valor $\alpha=0.7$ la alternativa con un valor mayor es $a_3$. En casos muy pesimistas de por ejemplo, $\alpha=0.1$ la alternativa óptima sería $a_1$, si por el contrario el valor de $\alpha$ fuera algo menos pesimista, por ejemplo $\alpha=0.3$ la mejor elección sería $a_2$
+
+### 4. Criterio de Savage
+```{r}
+res.savage<- criterio.Savage(y.1, favorable=T)
+df_savage<-data.frame(
+  Alternativa = names(res.savage$ValorAlternativas),
+  Valores = res.savage$ValorAlternativas,
+  Decision = ifelse(names(res.savage$ValorAlternativas) %in% names(res.savage$AlternativaOptima),
+                    paste0(res.savage$ValorOptimo, " (Óptima)"), ""))
+kable(df_savage, caption = "Criterio de Savage", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+La mejor alternativa para minimizar el arrepentimiento máximo es $a_3$
+
+### 5. Criterio de Laplace
+```{r}
+res.laplace<- criterio.Laplace(y.1, favorable=T)
+df_laplace<-data.frame(
+  Alternativa = names(res.laplace$ValorAlternativas),
+  Valores = round(res.laplace$ValorAlternativas,2),
+  Decision = ifelse(names(res.laplace$ValorAlternativas) %in% names(res.laplace$AlternativaOptima),
+                    paste0(round(res.laplace$ValorOptimo,2), " (Óptima)"), ""))
+kable(df_laplace, caption = "Criterio de Laplace", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+La mejor alternativa asumiendo que los estados son equiprobables es $a_3$
+
+### 6. Criterio del punto ideal
+```{r}
+res.puntoideal<- criterio.PuntoIdeal(y.1, favorable=T)
+df_puntoideal<-data.frame(
+  Alternativa = names(res.puntoideal$ValorAlternativas),
+  Valores = round(res.puntoideal$ValorAlternativas,2),
+  Decision = ifelse(names(res.puntoideal$ValorAlternativas) %in% names(res.puntoideal$AlternativaOptima),
+                    paste0(round(res.puntoideal$ValorOptimo,2), " (Óptima)"), ""))
+kable(df_puntoideal, caption = "Criterio del Punto Ideal", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightblue")
+```
+La alternativa más cercana al punto ideal es $a_3$
+
+
+## Problema 2 (Situación real)
+
+Un agricultor se plantea cuándo debería empezar a sembrar su cultivo, las tres opciones que tiene son: hacer una siembra temprana; que permite la correcta maduración del cultivo en caso de sequía, sembrar normalmente; que será lo ideal en caso de clima equilibrado, o hacer una siembra tardía; que permite el crecimiento adecuado en caso de lluvias excesivas.
+
+$d_1$:Hacer una siembra temprana.\
+$d_2$:Hacer una siembra normal.\
+$d_3$:Hacer una siembra tardía.
+
+La decisión debe tomarse teniendo en cuenta el posible clima que se presente en los meses siguientes a la siembra, el cual es totalmente impredecible, por lo que no podemos estimar ninguna probabilidad de precipitación. Estos estados climáticos pueden ser:
+
+$e_1$:Clima seco y poco lluvioso.\
+$e_2$:Clima equilibrado con lluvias repartidas de manera uniforme.\
+$e_3$:Clima húmedo con lluvias excesivas.
+
+El beneficio esperado en cada una de las situaciones planteadas es el siguiente:
+
+```{r}
+y.2<-matrix(c(300,450,100,
+              250,500,200,
+              150,350,400),nrow=3,byrow=T)
+colnames(y.2)<-c("e1","e2","e3")
+rownames(y.2)<-c("d1","d2","d3")
+
+kable(y.2, 
+      caption = "Beneficio según tipo de siembra y clima (en miles de €)", 
+      align = 'c', 
+      col.names = colnames(y.2)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
+  row_spec(0, bold = T, background = "lightgray")
+```
+Plantemos entonces una tabla que contenga a todos los criterios de decisión bajo incertidumbre con los datos:
+
+```{r}
+res.todos<-criterio.Todos(y.2, alfa=0.7, favorable=TRUE)
+kable(res.todos, caption = "Resumen de criterios de decisión bajo incertidumbre", align = 'c') %>%
+  kable_styling(bootstrap_options = "striped", full_width = F) %>%
+  row_spec(0, bold = T, background = "lightgray")
+```
+De acuerdo a los diferentes criterios utilizados, la mejor alternativa a tomar es $d_2$, es decir, hacer una siembra normal. Ya que se considera la mejor alternativa $5$ veces.

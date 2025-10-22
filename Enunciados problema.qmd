@@ -25,19 +25,20 @@ kable(y.1,
   kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
   row_spec(0, bold = T, background = "lightblue")
 ```
+
 ## Problema 2 (Situación real)
 
 Un agricultor se plantea cuándo debería empezar a sembrar su cultivo, las tres opciones que tiene son: hacer una siembra temprana; que permite la correcta maduración del cultivo en caso de sequía, sembrar normalmente; que será lo ideal en caso de clima equilibrado, o hacer una siembra tardía; que permite el crecimiento adecuado en caso de lluvias excesivas.
 
-d1:Hacer una siembra temprana.  
-d2:Hacer una siembra normal.  
-d3:Hacer una siembra tardía.
+$d_1$:Hacer una siembra temprana.\
+$d_2$:Hacer una siembra normal.\
+$d_3$:Hacer una siembra tardía.
 
 La decisión debe tomarse teniendo en cuenta el posible clima que se presente en los meses siguientes a la siembra, el cual es totalmente impredecible, por lo que no podemos estimar ninguna probabilidad de precipitación. Estos estados climáticos pueden ser:
 
-e1:Clima seco y poco lluvioso.  
-e2:Clima equilibrado con lluvias repartidas de manera uniforme.  
-e3:Clima húmedo con lluvias excesivas.
+$e_1$:Clima seco y poco lluvioso.\
+$e_2$:Clima equilibrado con lluvias repartidas de manera uniforme.\
+$e_3$:Clima húmedo con lluvias excesivas.
 
 El beneficio esperado en cada una de las situaciones planteadas es el siguiente:
 
