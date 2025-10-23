@@ -10,3 +10,6 @@ que se plantean.
 
 Resoluciones: Contiene el código y los enunciados de los dos problemas que se plantean,
 así como el código utilizado para resolverlos.
+
+Las funciones utilizadas en los problemas se encuentran definidas en el archivo
+"teoriadecision_funciones_incertidumbre.R"
